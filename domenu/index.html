@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Hierarchy</title>
+    <link rel="stylesheet" type="text/css" href="presentation-style.css"/>
+    <link rel="stylesheet" type="text/css" href="jquery.domenu-0.100.77.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/github.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+<section>
+    <div class="dd" id="domenu-0" style="margin-left: 20%;">
+        <button class="dd-new-item">+</button>
+        <li class="dd-item-blueprint">
+            <button class="collapse" data-action="collapse" type="button" style="display: none;">–</button>
+            <button class="expand" data-action="expand" type="button" style="display: none;">+</button>
+            <div class="dd-handle dd3-handle">Drag</div>
+            <div class="dd3-content">
+                <span class="item-name">[item_name]</span>
+                <div class="dd-button-container">
+                    <button class="item-add">+</button>
+                    <button class="item-remove" data-confirm-class="item-remove-confirm">&times;</button>
+                </div>
+                <div class="dd-edit-box" style="display: none;">
+                    <input type="text" name="title" autocomplete="off" placeholder="Item"
+                          data-placeholder="Any nice idea for the title?"
+                          data-default-value="doMenu List Item. {?numeric.increment}">
+                    <i class="end-edit">save</i>
+                </div>
+            </div>
+        </li>
+        <ol class="dd-list"></ol>
+    </div>
+</section>
+
+<div id="domenu-0-output" class="output-preview-container">
+    <h4>JSON Output Preview (User menu)</h4>
+    <textarea style="width: 100%; min-height: 300px;" name="jsonOutput" class="jsonOutput"></textarea>
+    <input type="checkbox" name="keepchages" class="keepChanges" checked> Keep changes after page reload (localStorage)
+    <br><br>
+    <input style="display:none;" type="button" name="clearLocalStorage" class="clearLocalStorage" value="Reset demo">
+</div>
+
+<script>
+  $(document).ready(function() {
+    var $domenu            = $('#domenu-0'),
+        domenu             = $('#domenu-0').domenu(),
+        $outputContainer   = $('#domenu-0-output'),
+        $jsonOutput        = $outputContainer.find('.jsonOutput'),
+        $keepChanges       = $outputContainer.find('.keepChanges'),
+        $clearLocalStorage = $outputContainer.find('.clearLocalStorage');
+
+    $domenu.domenu({
+        slideAnimationDuration: 0,
+        select2: {
+          support: true,
+          params:  {
+            tags: true
+          }
+        },
+        data: window.localStorage.getItem('domenu-0-json') || '[]'
+    })
+    .onCreateItem(function(blueprint) {
+        var customButton = $(blueprint).find('.custom-button-example');
+        customButton.click(function() {
+            blueprint.find('.dd3-content span').first().click();
+        });
+    })
+    .parseJson()
+    .on(['onItemCollapsed', 'onItemExpanded', 'onItemAdded', 'onSaveEditBoxInput', 'onItemDrop', 'onItemDrag', 'onItemRemoved', 'onItemEndEdit'], function(a, b, c) {
+        $jsonOutput.val(domenu.toJson());
+        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-0-json', domenu.toJson());
+    })
+    .onToJson(function() {
+        if(window.localStorage.length) $clearLocalStorage.show();
+    });
+
+    // Console event examples
+    domenu.on('*', function(a, b, c) {
+        console.log('event:', '*', 'arguments:', arguments, 'context:', this);
+    })
+    .onParseJson(function() {
+      console.log('event: onFromJson', 'arguments:', arguments, 'context:', this);
+    })
+    .onToJson(function() {
+      console.log('event: onToJson', 'arguments:', arguments, 'context:', this);
+    })
+    .onSaveEditBoxInput(function() {
+      console.log('event: onSaveEditBoxInput', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemDrag(function() {
+      console.log('event: onItemDrag', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemDrop(function() {
+      console.log('event: onItemDrop', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemAdded(function() {
+      console.log('event: onItemAdded', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemCollapsed(function() {
+      console.log('event: onItemCollapsed', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemExpanded(function() {
+      console.log('event: onItemExpanded', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemRemoved(function() {
+      console.log('event: onItemRemoved', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemStartEdit(function() {
+      console.log('event: onItemStartEdit', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemEndEdit(function() {
+      console.log('event: onItemEndEdit', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemAddChildItem(function() {
+      console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemAddChildItem(function() {
+      console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemAddChildItem(function() {
+      console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+    })
+    .onItemAddChildItem(function() {
+      console.log('event: onItemAddChildItem', 'arguments:', arguments, 'context:', this);
+    });
+
+    if(window.localStorage.length) $clearLocalStorage.show();
+
+    $clearLocalStorage.click(function() {
+        if(true) window.localStorage.clear();
+        if(!window.localStorage.length) $clearLocalStorage.hide();
+        // Part of the reset demo routine
+        window.location.reload();
+    });
+
+    $jsonOutput.val(domenu.toJson());
+    $keepChanges.on('click', function() {
+        if(!$keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', false);
+        if($keepChanges.is(':checked')) window.localStorage.setItem('domenu-1KeepChanges', true);
+    });
+
+    if(window.localStorage.getItem('domenu-1KeepChanges') === "false") $keepChanges.attr('checked', false);
+  });
+</script>
+
+
+<script src="jquery.domenu-0.100.77.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
