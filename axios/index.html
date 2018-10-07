@@ -1,0 +1,18 @@
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js'></script>
+<html>
+  <body>
+      <div id="demo"></div>
+  </body>
+</html>
+<script>
+  async function getProjectSettings(){
+    let result = axios.get('project_settings.json');
+    return result;
+  }
+
+  getProjectSettings().then(function (response) {
+      console.log(response.data);
+      $("#demo").html( JSON.stringify(response.data));
+  });
+</script>
