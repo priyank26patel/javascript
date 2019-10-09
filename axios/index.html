@@ -11,8 +11,10 @@
     return result;
   }
 
-  getProjectSettings().then(function (response) {
+  getProjectSettings()
+    .then(function (response) {
       console.log(response.data);
       $("#demo").html( JSON.stringify(response.data));
-  });
+    })
+    .catch(function(e){ console.log(e)})
 </script>
